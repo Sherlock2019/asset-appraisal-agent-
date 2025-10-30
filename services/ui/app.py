@@ -37,7 +37,11 @@ def _login(user: str, email: str) -> None:
         "email": email,
         "timestamp": datetime.datetime.utcnow().isoformat(),
     }
-    st.session_state.stage = st.session_state.login_target
+    agent = st.session_state.get("selected_agent", "credit")
+    target_stage = "asset_agent" if agent == "asset" else "credit_agent"
+    # Keep the cached target in sync so a rerun won't reset the destination.
+    st.session_state.login_target = target_stage
+    st.session_state.stage = target_stage
     st.experimental_rerun()
 
 
